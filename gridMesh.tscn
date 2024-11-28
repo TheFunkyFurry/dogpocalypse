@@ -1,0 +1,16 @@
+[gd_scene load_steps=4 format=3 uid="uid://cl6kd0hketnq3"]
+
+[ext_resource type="Texture2D" uid="uid://ci01k3uoj7oxu" path="res://textures/texTest.png" id="1_woqln"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6tje4"]
+albedo_texture = ExtResource("1_woqln")
+
+[sub_resource type="QuadMesh" id="QuadMesh_ssp7n"]
+material = SubResource("StandardMaterial3D_6tje4")
+orientation = 0
+
+[node name="GridMesh" type="Node3D"]
+
+[node name="dog0" type="MeshInstance3D" parent="."]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 1.36889, 0, 0)
+mesh = SubResource("QuadMesh_ssp7n")

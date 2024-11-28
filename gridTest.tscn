@@ -1,24 +1,63 @@
-[gd_scene load_steps=5 format=4 uid="uid://cx2q85dfnsacs"]
+[gd_scene load_steps=11 format=3 uid="uid://cx2q85dfnsacs"]
 
-[ext_resource type="Texture2D" uid="uid://bn0g6yf2dhsrm" path="res://tileTest.png" id="1_l6lml"]
-[ext_resource type="Script" path="res://tileTest.cs" id="2_pqgmt"]
+[ext_resource type="Texture2D" uid="uid://dh5y7xnfjpavo" path="res://textures/texGrid.png" id="1_63ijj"]
+[ext_resource type="Script" path="res://test.cs" id="3_axehf"]
+[ext_resource type="MeshLibrary" uid="uid://bfun8u7fg7i1c" path="res://gridMeshLib.tres" id="3_rch8j"]
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_31mei"]
-texture = ExtResource("1_l6lml")
-0:0/0 = 0
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_4farn"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
 
-[sub_resource type="TileSet" id="TileSet_6bwo5"]
-tile_size = Vector2i(17, 17)
-sources/0 = SubResource("TileSetAtlasSource_31mei")
+[sub_resource type="Sky" id="Sky_bmua5"]
+sky_material = SubResource("ProceduralSkyMaterial_4farn")
 
-[node name="Node2D" type="Node2D"]
+[sub_resource type="Environment" id="Environment_tad7w"]
+background_mode = 2
+sky = SubResource("Sky_bmua5")
+tonemap_mode = 2
+glow_enabled = true
 
-[node name="Polygon2D" type="Polygon2D" parent="."]
-scale = Vector2(5, 5)
-color = Color(0, 0, 0, 1)
-polygon = PackedVector2Array(0, -6.8, 13.6, -6.8, 13.6, 6.8, 6.8, 6.8, 0, 6.8)
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tpmw4"]
+albedo_color = Color(0.13, 0.13, 0.13, 1)
 
-[node name="TileMapLayer" type="TileMapLayer" parent="."]
-tile_map_data = PackedByteArray("AAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAABAP//AAAAAAAAAAAAAP//AAAAAAAAAAABAP7/AAAAAAAAAAAAAP7/AAAAAAAAAAACAP7/AAAAAAAAAAACAP//AAAAAAAAAAACAAAAAAAAAAAAAAACAAEAAAAAAAAAAAABAAEAAAAAAAAAAAAAAAEAAAAAAAAAAAADAAEAAAAAAAAAAAADAAAAAAAAAAAAAAADAP//AAAAAAAAAAADAP7/AAAAAAAAAAA=")
-tile_set = SubResource("TileSet_6bwo5")
-script = ExtResource("2_pqgmt")
+[sub_resource type="PlaneMesh" id="PlaneMesh_8o3uf"]
+material = SubResource("StandardMaterial3D_tpmw4")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jyioc"]
+albedo_texture = ExtResource("1_63ijj")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_m8cho"]
+material = SubResource("StandardMaterial3D_jyioc")
+size = Vector2(1, 1)
+
+[node name="Node3D" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_tad7w")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.438415, 0.778361, -0.449385, -1.49013e-08, 0.499998, 0.866027, 0.898773, -0.379679, 0.219207, -5.97124, 4.1867, 7.15846)
+shadow_enabled = true
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(-4.37114e-08, -0.204496, 0.978867, 0, 0.978867, 0.204496, -1, 8.93881e-09, -4.27877e-08, 5.251, 2.488, 0)
+
+[node name="floorMesh" type="MeshInstance3D" parent="."]
+transform = Transform3D(-20, 0, -1.74846e-06, 0, 20, 0, 1.74846e-06, 0, -20, 0, 0, 0)
+mesh = SubResource("PlaneMesh_8o3uf")
+
+[node name="gridMeshRight" type="MeshInstance3D" parent="floorMesh"]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0.001, 0.15)
+mesh = SubResource("PlaneMesh_m8cho")
+
+[node name="gridMeshLeft" type="MeshInstance3D" parent="floorMesh"]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0.001, -0.15)
+mesh = SubResource("PlaneMesh_m8cho")
+
+[node name="GridMap" type="GridMap" parent="."]
+mesh_library = ExtResource("3_rch8j")
+cell_size = Vector3(1, 1, 1)
+data = {
+"cells": PackedInt32Array(65534, 4, 0, 65535, 3, 0, 0, 2, 0, 1, 1, 0, 1, 65534, 0, 0, 65533, 0, 65535, 65532, 0, 65534, 65531, 0)
+}
+script = ExtResource("3_axehf")
